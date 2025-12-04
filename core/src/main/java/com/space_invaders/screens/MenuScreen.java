@@ -12,8 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.space_invaders.MyGame;
+import com.space_invaders.red.HiloCliente;
 
 public class MenuScreen implements Screen {
+
+    public static boolean empieza = false;
 
     private final MyGame game;
     private final Texture imagenFondo;
@@ -79,13 +82,16 @@ public class MenuScreen implements Screen {
             }
         });
 
-        botonMultijugador.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                multijugador = true;
-                game.setScreen(new GameScreen(game, multijugador));
-            }
-        });
+        if(empieza){ // Deshabilitamos el boton multijugador hasta que ambos jugadores esten listos
+            botonMultijugador.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    multijugador = true;
+                    game.setScreen(new GameScreen(game, multijugador));
+                }
+            });
+        }
+
         botonControles.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -103,6 +109,7 @@ public class MenuScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0f, 0f, 0f, 0f);
+
         batch.begin();
         batch.draw(imagenFondo, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();

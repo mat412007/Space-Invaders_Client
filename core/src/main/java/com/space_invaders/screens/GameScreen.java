@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.space_invaders.*;
+import com.space_invaders.red.HiloCliente;
 
 import java.awt.*;
 
@@ -23,6 +24,8 @@ import java.awt.*;
 public class GameScreen implements Screen {
     final MyGame game;
     private SpriteBatch batch;
+
+    private HiloCliente hc; // Hilo para el cliente
 
     private Texture fondo;
     private Sprite fondoPantalla;
@@ -47,6 +50,8 @@ public class GameScreen implements Screen {
         this.game = game;
         batch = game.getBatch();
 
+        hc = new HiloCliente();
+
         fondo = new Texture("FondoJuego.png");
         fondoPantalla = new Sprite(fondo);
 
@@ -67,6 +72,7 @@ public class GameScreen implements Screen {
         icono_2 = new Sprite(nave_2);
 
         if(!multijugador) {
+            hc.start(); // Inicio el hilo para el cliente
             jugador.posicion = new Vector2((Gdx.graphics.getWidth()/2f)-(jugador.sprite.getWidth()/2f), 10);
             jugador_2.posicion = new Vector2(0, Gdx.graphics.getHeight());
         }
