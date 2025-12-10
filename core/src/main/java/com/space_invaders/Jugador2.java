@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.space_invaders.red.HiloCliente;
 
 public class Jugador2 {
     private float x;
@@ -16,10 +17,13 @@ public class Jugador2 {
     public Sprite sprite_disparo;
     public float velocidad = 350;
     public float velocidad_disparo = 1500;
+    private HiloCliente hc;
 
-    public Jugador2(Texture img_nave, Texture img_disparo){
+    public Jugador2(Texture img_nave, Texture img_disparo, HiloCliente hc){
         sprite = new Sprite(img_nave);
         sprite_disparo = new Sprite(img_disparo);
+
+        this.hc = hc;
 
         // Redimensionar la imagen directamente al cargarla
         float scaleFactor = 0.046875f;  // Factor de escala para cambiar el tamaño

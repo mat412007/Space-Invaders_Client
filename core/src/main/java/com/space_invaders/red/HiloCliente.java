@@ -26,7 +26,7 @@ public class HiloCliente extends Thread {
         enviarMensaje("Conexion");
     }
 
-    private void enviarMensaje(String msg) {
+    public void enviarMensaje(String msg) {
         byte[] data = msg.getBytes();
         DatagramPacket dp = new DatagramPacket(data, data.length, IPServidor, puerto);
         try {

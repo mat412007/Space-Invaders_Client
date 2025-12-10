@@ -23,28 +23,28 @@ import java.awt.*;
 // GameScreen implementa Screen
 public class GameScreen implements Screen {
     final MyGame game;
-    private SpriteBatch batch;
+    private final SpriteBatch batch;
 
     private HiloCliente hc; // Hilo para el cliente
 
-    private Texture fondo;
-    private Sprite fondoPantalla;
+    private final Texture fondo;
+    private final Sprite fondoPantalla;
 
-    private Sprite fondoEspera;
+    private final Sprite fondoEspera;
 
     private boolean empiezaJuego = false;
     private boolean multijugador;
-    private Sprite icono_1;
-    private Sprite icono_2;
+    private final Sprite icono_1;
+    private final Sprite icono_2;
 
     private Skin skin;
     private Stage stage;
     private Table table;
 
-    private Texture nave;
-    private Texture nave_2;
-    private Texture disparo;
-    private Texture alien;
+    private final Texture nave;
+    private final Texture nave_2;
+    private final Texture disparo;
+    private final Texture alien;
     private Jugador jugador;
     private Jugador2 jugador_2;
     private AlienManager alienManager;
@@ -63,8 +63,8 @@ public class GameScreen implements Screen {
         nave_2 = new Texture("nave_2.png");
         disparo = new Texture("bala_2.png");
         alien = new Texture("alien_1.png");
-        jugador = new Jugador(nave, disparo);
-        jugador_2 = new Jugador2(nave_2, disparo);
+        jugador = new Jugador(nave, disparo, hc);
+        jugador_2 = new Jugador2(nave_2, disparo, hc);
         int anchoAliens = 7;
         int altoAliens = 4;
         int espacioAliens = 80;
@@ -76,7 +76,7 @@ public class GameScreen implements Screen {
         hc = new HiloCliente();
         hc.start();
 
-        if(!multijugador) {
+        if(!multijugador) { // Ajusto las posiciones de las dos naves
             jugador.posicion = new Vector2((Gdx.graphics.getWidth()/2f)-(jugador.sprite.getWidth()/2f), 10);
             jugador_2.posicion = new Vector2(0, Gdx.graphics.getHeight());
         }
