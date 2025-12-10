@@ -22,6 +22,7 @@ public class HiloCliente extends Thread {
         } catch (SocketException | UnknownHostException e) {
             throw new RuntimeException(e);
         }
+        System.out.println("Se envia mensaje de conexion al servidor...");
         enviarMensaje("Conexion");
     }
 
@@ -50,8 +51,10 @@ public class HiloCliente extends Thread {
     }
 
     private void procesarMensaje(DatagramPacket dp) {
-        String msg = Arrays.toString(dp.getData()).trim();
+        String msg = new String(dp.getData()).trim();
+
         if(msg.equals("OK")) {
+            System.out.println("Conexion establecida con el servidor en " + dp.getAddress() + ":" + dp.getPort());
             IPServidor = dp.getAddress();
         } else if(msg.equals("Empieza")) {
             MenuScreen.empieza = true;

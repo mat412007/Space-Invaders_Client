@@ -82,7 +82,6 @@ public class MenuScreen implements Screen {
             }
         });
 
-        if(empieza){ // Deshabilitamos el boton multijugador hasta que ambos jugadores esten listos
             botonMultijugador.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -90,7 +89,6 @@ public class MenuScreen implements Screen {
                     game.setScreen(new GameScreen(game, multijugador));
                 }
             });
-        }
 
         botonControles.addListener(new ChangeListener() {
             @Override
