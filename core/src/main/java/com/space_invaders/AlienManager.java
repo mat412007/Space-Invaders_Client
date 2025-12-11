@@ -31,8 +31,8 @@ public class AlienManager {
 
         boolean hayAliensVivos;
         // Variables para el descenso
-        float alienTotalDropDistance = 50f; // 80
-        final float alienHorizontalSpeed = 500f;
+        float alienTotalDropDistance = 50f;
+        final float alienHorizontalSpeed = 5f; // 500
         float alienVerticalSpeed = 300f;
 
         // Si ya hay una distancia de descenso pendiente, hay que aplicarla primero

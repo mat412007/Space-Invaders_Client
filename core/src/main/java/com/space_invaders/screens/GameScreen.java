@@ -26,13 +26,12 @@ public class GameScreen implements Screen {
     private final SpriteBatch batch;
 
     private HiloCliente hc; // Hilo para el cliente
+    private boolean empiezaJuego = false;
 
     private final Texture fondo;
     private final Sprite fondoPantalla;
 
     private final Sprite fondoEspera;
-
-    private boolean empiezaJuego = false;
     private boolean multijugador;
     private final Sprite icono_1;
     private final Sprite icono_2;
@@ -84,6 +83,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        empiezaJuego = hc.empezar;
         if(!empiezaJuego){
             batch.begin();
             fondoEspera.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

@@ -14,6 +14,8 @@ public class HiloCliente extends Thread {
     private int puerto = 9998;
     private boolean fin = false;
 
+    public boolean empezar = false;
+
     //Constructor
     public HiloCliente() {
         try {
@@ -57,7 +59,7 @@ public class HiloCliente extends Thread {
             System.out.println("Conexion establecida con el servidor en " + dp.getAddress() + ":" + dp.getPort());
             IPServidor = dp.getAddress();
         } else if(msg.equals("Empieza")) {
-            MenuScreen.empieza = true;
+            empezar = true;
         }
     }
 

@@ -16,8 +16,6 @@ import com.space_invaders.red.HiloCliente;
 
 public class MenuScreen implements Screen {
 
-    public static boolean empieza = false;
-
     private final MyGame game;
     private final Texture imagenFondo;
 
@@ -82,13 +80,13 @@ public class MenuScreen implements Screen {
             }
         });
 
-            botonMultijugador.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    multijugador = true;
-                    game.setScreen(new GameScreen(game, multijugador));
-                }
-            });
+        botonMultijugador.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                multijugador = true;
+                game.setScreen(new GameScreen(game, multijugador));
+            }
+        });
 
         botonControles.addListener(new ChangeListener() {
             @Override
