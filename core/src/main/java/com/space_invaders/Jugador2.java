@@ -17,13 +17,10 @@ public class Jugador2 {
     public Sprite sprite_disparo;
     public float velocidad = 350;
     public float velocidad_disparo = 1500;
-    private HiloCliente hc;
 
     public Jugador2(Texture img_nave, Texture img_disparo, HiloCliente hc){
         sprite = new Sprite(img_nave);
         sprite_disparo = new Sprite(img_disparo);
-
-        this.hc = hc;
 
         // Redimensionar la imagen directamente al cargarla
         float scaleFactor = 0.046875f;  // Factor de escala para cambiar el tamaño

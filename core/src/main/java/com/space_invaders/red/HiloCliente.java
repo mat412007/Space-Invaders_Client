@@ -1,5 +1,7 @@
 package com.space_invaders.red;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.space_invaders.MyGame;
 import com.space_invaders.screens.MenuScreen;
 
@@ -26,6 +28,13 @@ public class HiloCliente extends Thread {
         }
         System.out.println("Se envia mensaje de conexion al servidor...");
         enviarMensaje("Conexion");
+    }
+
+    public void cerrar() {
+        fin = true;
+        if (conexion != null && !conexion.isClosed()) {
+            conexion.close();
+        }
     }
 
     public void enviarMensaje(String msg) {

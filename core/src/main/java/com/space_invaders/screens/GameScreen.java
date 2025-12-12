@@ -1,6 +1,7 @@
 package com.space_invaders.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen; // Importamos la interfaz Screen
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -56,8 +57,6 @@ public class GameScreen implements Screen {
         fondoPantalla = new Sprite(fondo);
         fondoEspera = new Sprite(new Texture("Espera.png"));
 
-        this.multijugador = multijugador;
-
         nave = new Texture("nave.png");
         nave_2 = new Texture("nave_2.png");
         disparo = new Texture("bala_2.png");
@@ -72,8 +71,12 @@ public class GameScreen implements Screen {
         icono_1 = new Sprite(nave);
         icono_2 = new Sprite(nave_2);
 
-        hc = new HiloCliente();
-        hc.start();
+        this.multijugador = multijugador;
+
+        if(multijugador) {
+            hc = new HiloCliente();
+            hc.start();
+        }
 
         if(!multijugador) { // Ajusto las posiciones de las dos naves
             jugador.posicion = new Vector2((Gdx.graphics.getWidth()/2f)-(jugador.sprite.getWidth()/2f), 10);
@@ -83,66 +86,84 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        empiezaJuego = hc.empezar;
-        if(!empiezaJuego){
+        if(multijugador) {
+            empiezaJuego = hc.empezar;
+        }
+        if(!empiezaJuego && multijugador) {
             batch.begin();
             fondoEspera.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             fondoEspera.setPosition(0, 0);
             fondoEspera.draw(batch);
             batch.end();
-        } else {
-            ScreenUtils.clear(0f, 0f, 0f, 0f);
-            float deltaTime = Gdx.graphics.getDeltaTime();
-            alienManager.ActualizarMovimiento(deltaTime);
+            return;
+        }
+        ScreenUtils.clear(0f, 0f, 0f, 0f);
+        float deltaTime = Gdx.graphics.getDeltaTime();
+        alienManager.ActualizarMovimiento(deltaTime);
 
-            batch.begin();
-            icono_1.setSize(100, 100);
-            icono_2.setSize(100, 100);
-            icono_1.setPosition(150 / 2f - icono_1.getWidth() / 2f, Gdx.graphics.getHeight() / 2f - icono_1.getHeight() / 2f);
-            icono_2.setPosition(Gdx.graphics.getWidth() - (150 / 2f) - icono_1.getWidth() / 2f, Gdx.graphics.getHeight() / 2f - icono_2.getHeight() / 2f);
-            icono_1.draw(batch);
-            icono_2.draw(batch);
-            // batch.draw(fondo, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            // Dibujar fondo de pantalla ajustado
-            fondoPantalla.setSize(700, Gdx.graphics.getHeight());
-            fondoPantalla.setPosition(150, 0);
-            fondoPantalla.draw(batch);
+        // Movimientos de las naves
+        if(Gdx.input.isKeyPressed(Input.Keys.A)){
+            hc.enviarMensaje("IZQUIERDA");
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.D)){
+            hc.enviarMensaje("DERECHA");
+        }
 
-            // Dibujamos las naves de los jugadores
-            jugador.Dibujar(batch);
-            jugador_2.Dibujar(batch);
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            hc.enviarMensaje("IZQUIERDA2");
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            hc.enviarMensaje("DERECHA2");
+        }
 
-            // Cuando ya no quedan aliens
-            if (alienManager.victoria()) {
+        batch.begin();
+        icono_1.setSize(100, 100);
+        icono_2.setSize(100, 100);
+        icono_1.setPosition(150 / 2f - icono_1.getWidth() / 2f, Gdx.graphics.getHeight() / 2f - icono_1.getHeight() / 2f);
+        icono_2.setPosition(Gdx.graphics.getWidth() - (150 / 2f) - icono_1.getWidth() / 2f, Gdx.graphics.getHeight() / 2f - icono_2.getHeight() / 2f);
+        icono_1.draw(batch);
+        icono_2.draw(batch);
+        // Dibujar fondo de pantalla ajustado
+        fondoPantalla.setSize(700, Gdx.graphics.getHeight());
+        fondoPantalla.setPosition(150, 0);
+        fondoPantalla.draw(batch);
+
+        // Dibujamos las naves de los jugadores y los aliens
+        jugador.Dibujar(batch);
+        jugador_2.Dibujar(batch);
+        alienManager.Dibujar(batch);
+
+        // Líneas de límite del espacio de juego
+        Linea.dibujar(150, 0, 150, Gdx.graphics.getHeight()); // Espacio de juego es de 700
+        Linea.dibujar(850, 0, 850, Gdx.graphics.getHeight());
+
+        // Mostrar el botón de back
+        if (stage != null) {
+            stage.act(delta);
+            stage.draw();
+        }
+
+        // Cuando ya no quedan aliens
+        if (alienManager.victoria()) {
+            game.setScreen(new MenuScreen(game));
+        }
+
+        // Si la bala conecta con un alien, si transporta fuera de la pantalla
+        if (alienManager.colisionConBala(jugador.sprite_disparo)) {
+            jugador.posicion_disparo.y = Gdx.graphics.getHeight();
+        }
+        if (alienManager.colisionConBala(jugador_2.sprite_disparo)) {
+            jugador_2.posicion_disparo.y = Gdx.graphics.getHeight();
+        }
+
+        for (Alien alien : alienManager.getAliens()) {
+            // Si los aliens tocan a cualquier jugador, ambos pierden
+            if (alien.sprite.getBoundingRectangle().overlaps(jugador.sprite.getBoundingRectangle()) ||
+                alien.sprite.getBoundingRectangle().overlaps(jugador_2.sprite.getBoundingRectangle())) {
                 game.setScreen(new MenuScreen(game));
             }
-
-            // Si la bala conecta con un alien, si transporta fuera de la pantalla
-            if (alienManager.colisionConBala(jugador.sprite_disparo)) {
-                jugador.posicion_disparo.y = Gdx.graphics.getHeight();
-            }
-            if (alienManager.colisionConBala(jugador_2.sprite_disparo)) {
-                jugador_2.posicion_disparo.y = Gdx.graphics.getHeight();
-            }
-
-            for (Alien alien : alienManager.getAliens()) {
-                // Si los aliens tocan a cualquier jugador, ambos pierden
-                if (alien.sprite.getBoundingRectangle().overlaps(jugador.sprite.getBoundingRectangle()) ||
-                    alien.sprite.getBoundingRectangle().overlaps(jugador_2.sprite.getBoundingRectangle())) {
-                    game.setScreen(new MenuScreen(game));
-                }
-            }
-            alienManager.Dibujar(batch);
-            game.getBatch().end();
-            Linea.dibujar(150, 0, 150, Gdx.graphics.getHeight()); // Espacio de juego es de 700
-            Linea.dibujar(850, 0, 850, Gdx.graphics.getHeight());
-
-            // Mostrar el botón de back
-            if (stage != null) {
-                stage.act(delta);
-                stage.draw();
-            }
         }
+        game.getBatch().end();
     }
 
     // --- Métodos obligatorios de la interfaz Screen ---
@@ -164,6 +185,10 @@ public class GameScreen implements Screen {
         }
         if (skin != null) {
             skin.dispose();
+        }
+
+        if (hc != null) {
+            hc.cerrar();
         }
     }
 
