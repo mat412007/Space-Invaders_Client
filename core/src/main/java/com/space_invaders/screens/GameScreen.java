@@ -61,8 +61,6 @@ public class GameScreen implements Screen {
         nave_2 = new Texture("nave_2.png");
         disparo = new Texture("bala_2.png");
         alien = new Texture("alien_1.png");
-        jugador = new Jugadores(nave, disparo, 1);
-        jugador_2 = new Jugadores(nave_2, disparo, 2);
         int anchoAliens = 7;
         int altoAliens = 4;
         int espacioAliens = 80;
@@ -73,21 +71,32 @@ public class GameScreen implements Screen {
 
         this.multijugador = multijugador;
 
+        //jugador_2 = new Jugadores(nave_2, disparo, 2);
+
         if(multijugador) {
             hc = new HiloCliente();
             hc.start();
         }
 
-        if(!multijugador) { // Ajusto las posiciones de las dos naves
-            jugador.posicion = new Vector2((Gdx.graphics.getWidth()/2f)-(jugador.sprite.getWidth()/2f), 10);
-            jugador_2.posicion = new Vector2(0, Gdx.graphics.getHeight());
-        }
     }
 
     @Override
     public void render(float delta) {
         if(multijugador) {
             empiezaJuego = hc.empezar;
+            if(jugador == null) {
+                if(hc.idCliente == 1){
+                    jugador = new Jugadores(nave, disparo, hc.idCliente);
+                } else if(hc.idCliente == 2){
+                    jugador = new Jugadores(nave_2, disparo, hc.idCliente);
+                } else {
+                    jugador = new Jugadores(nave, disparo, 1);
+                }
+            }
+        }
+        if(!multijugador) { // Ajusto las posiciones de las dos naves
+            jugador.posicion = new Vector2((Gdx.graphics.getWidth()/2f)-(jugador.sprite.getWidth()/2f), 10);
+            //jugador_2.posicion = new Vector2(0, Gdx.graphics.getHeight());
         }
         if(!empiezaJuego && multijugador) {
             batch.begin();
@@ -101,21 +110,6 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(0f, 0f, 0f, 0f);
         float deltaTime = Gdx.graphics.getDeltaTime();
         alienManager.ActualizarMovimiento(deltaTime);
-
-        // Movimientos de las naves
-        if(Gdx.input.isKeyPressed(Input.Keys.A) && multijugador){
-            hc.enviarMensaje("IZQUIERDA");
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.D) && multijugador){
-            hc.enviarMensaje("DERECHA");
-        }
-
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && multijugador) {
-            hc.enviarMensaje("IZQUIERDA");
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && multijugador) {
-            hc.enviarMensaje("DERECHA");
-        }
 
         batch.begin();
         icono_1.setSize(100, 100);
@@ -131,7 +125,7 @@ public class GameScreen implements Screen {
 
         // Dibujamos las naves de los jugadores y los aliens
         jugador.Dibujar(batch);
-        jugador_2.Dibujar(batch);
+        //jugador_2.Dibujar(batch);
         alienManager.Dibujar(batch);
 
         // Líneas de límite del espacio de juego
@@ -153,14 +147,14 @@ public class GameScreen implements Screen {
         if (alienManager.colisionConBala(jugador.sprite_disparo)) {
             jugador.posicion_disparo.y = Gdx.graphics.getHeight();
         }
-        if (alienManager.colisionConBala(jugador_2.sprite_disparo)) {
-            jugador_2.posicion_disparo.y = Gdx.graphics.getHeight();
-        }
+//        if (alienManager.colisionConBala(jugador_2.sprite_disparo)) {
+//            jugador_2.posicion_disparo.y = Gdx.graphics.getHeight();
+//        }
 
         for (Alien alien : alienManager.getAliens()) {
             // Si los aliens tocan a cualquier jugador, ambos pierden
-            if (alien.sprite.getBoundingRectangle().overlaps(jugador.sprite.getBoundingRectangle()) ||
-                alien.sprite.getBoundingRectangle().overlaps(jugador_2.sprite.getBoundingRectangle())) {
+            if (alien.sprite.getBoundingRectangle().overlaps(jugador.sprite.getBoundingRectangle()) /*||
+                alien.sprite.getBoundingRectangle().overlaps(jugador_2.sprite.getBoundingRectangle())*/) {
                 game.setScreen(new MenuScreen(game));
             }
         }
@@ -180,6 +174,7 @@ public class GameScreen implements Screen {
         nave_2.dispose();
         disparo.dispose();
         alien.dispose();
+        fondo.dispose();
 
         if (stage != null) {
             stage.dispose();

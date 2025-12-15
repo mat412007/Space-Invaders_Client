@@ -17,6 +17,7 @@ public class HiloCliente extends Thread {
     private boolean fin = false;
 
     public boolean empezar = false;
+    public int idCliente;
 
     //Constructor
     public HiloCliente() {
@@ -64,7 +65,9 @@ public class HiloCliente extends Thread {
     private void procesarMensaje(DatagramPacket dp) {
         String msg = new String(dp.getData()).trim();
 
-        if(msg.equals("OK")) {
+        if(msg.startsWith("OK")) {
+            idCliente = Integer.parseInt(msg.substring(3));
+            System.out.println("ID :" + idCliente);
             System.out.println("Conexion establecida con el servidor en " + dp.getAddress() + ":" + dp.getPort());
             IPServidor = dp.getAddress();
         }

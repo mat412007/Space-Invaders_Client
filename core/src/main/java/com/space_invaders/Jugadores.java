@@ -35,7 +35,7 @@ public class Jugadores {
             sprite_disparo.setSize(sprite.getWidth() * 0.15f - 2.5f, sprite.getHeight() * 0.15f + 10);
         }
 
-        // Calcular la posición centrada
+        // Calcular la posición de las naves en modo multijugador
         if (id == 1){
             x = (float) Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2 - sprite.getWidth();
         } else if(id == 2){
