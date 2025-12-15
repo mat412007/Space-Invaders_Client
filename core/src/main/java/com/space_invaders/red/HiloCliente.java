@@ -67,9 +67,12 @@ public class HiloCliente extends Thread {
         if(msg.equals("OK")) {
             System.out.println("Conexion establecida con el servidor en " + dp.getAddress() + ":" + dp.getPort());
             IPServidor = dp.getAddress();
-        } else if(msg.equals("Empieza")) {
+        }
+        if(msg.equals("Empieza")) {
             empezar = true;
         }
+
+        System.out.println("Mensaje recibido: " + msg);
     }
 
 }

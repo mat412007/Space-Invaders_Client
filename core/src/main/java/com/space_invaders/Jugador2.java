@@ -31,7 +31,6 @@ public class Jugador2 {
         x = (float) Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2 + sprite.getWidth();
         y = 10;
         posicion = new Vector2(x, y);
-        System.out.println(sprite.getWidth() + " : " + sprite.getHeight());
         posicion_disparo = new Vector2(0, 10000);
     }
 

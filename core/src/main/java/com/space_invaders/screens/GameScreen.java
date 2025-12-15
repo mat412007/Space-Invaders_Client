@@ -45,8 +45,8 @@ public class GameScreen implements Screen {
     private final Texture nave_2;
     private final Texture disparo;
     private final Texture alien;
-    private Jugador jugador;
-    private Jugador2 jugador_2;
+    private Jugadores jugador;
+    private Jugadores jugador_2;
     private AlienManager alienManager;
 
     public GameScreen(final MyGame game, boolean multijugador) {
@@ -61,8 +61,8 @@ public class GameScreen implements Screen {
         nave_2 = new Texture("nave_2.png");
         disparo = new Texture("bala_2.png");
         alien = new Texture("alien_1.png");
-        jugador = new Jugador(nave, disparo, hc);
-        jugador_2 = new Jugador2(nave_2, disparo, hc);
+        jugador = new Jugadores(nave, disparo, 1);
+        jugador_2 = new Jugadores(nave_2, disparo, 2);
         int anchoAliens = 7;
         int altoAliens = 4;
         int espacioAliens = 80;
@@ -97,23 +97,24 @@ public class GameScreen implements Screen {
             batch.end();
             return;
         }
+
         ScreenUtils.clear(0f, 0f, 0f, 0f);
         float deltaTime = Gdx.graphics.getDeltaTime();
         alienManager.ActualizarMovimiento(deltaTime);
 
         // Movimientos de las naves
-        if(Gdx.input.isKeyPressed(Input.Keys.A)){
+        if(Gdx.input.isKeyPressed(Input.Keys.A) && multijugador){
             hc.enviarMensaje("IZQUIERDA");
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.D)){
+        if(Gdx.input.isKeyPressed(Input.Keys.D) && multijugador){
             hc.enviarMensaje("DERECHA");
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            hc.enviarMensaje("IZQUIERDA2");
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && multijugador) {
+            hc.enviarMensaje("IZQUIERDA");
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            hc.enviarMensaje("DERECHA2");
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && multijugador) {
+            hc.enviarMensaje("DERECHA");
         }
 
         batch.begin();
