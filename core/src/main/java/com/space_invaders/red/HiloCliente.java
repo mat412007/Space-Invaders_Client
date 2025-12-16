@@ -3,6 +3,7 @@ package com.space_invaders.red;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.space_invaders.MyGame;
+import com.space_invaders.screens.GameScreen;
 import com.space_invaders.screens.MenuScreen;
 
 import java.io.IOException;
@@ -18,9 +19,11 @@ public class HiloCliente extends Thread {
 
     public boolean empezar = false;
     public int idCliente;
+    private GameScreen gameScreen;
 
     //Constructor
-    public HiloCliente() {
+    public HiloCliente(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
         try {
             conexion = new DatagramSocket();
             IPServidor = InetAddress.getByName("255.255.255.255");
@@ -65,16 +68,28 @@ public class HiloCliente extends Thread {
     private void procesarMensaje(DatagramPacket dp) {
         String msg = new String(dp.getData()).trim();
 
-        if(msg.startsWith("OK")) {
+        String[] mensajePartido = msg.split(":");
+
+        if(mensajePartido[0].equals("OK")) {
             idCliente = Integer.parseInt(msg.substring(3));
             System.out.println("ID :" + idCliente);
             System.out.println("Conexion establecida con el servidor en " + dp.getAddress() + ":" + dp.getPort());
             IPServidor = dp.getAddress();
         }
-        if(msg.equals("Empieza")) {
+        if(mensajePartido[0].equals("Empieza")) {
             empezar = true;
         }
 
+        if(mensajePartido[0].equals("actualizarPosicion")){
+            if(mensajePartido[1].equals("x")){
+                int naveId = Integer.parseInt(mensajePartido[2]);
+                gameScreen.actualizarPosicionNave(naveId, Float.parseFloat(mensajePartido[3]));
+            }
+            if(mensajePartido[1].equals("d")){
+                int naveId = Integer.parseInt(mensajePartido[2]);
+                gameScreen.actualizarPosicionDisparo(naveId, Float.parseFloat(mensajePartido[3]), Float.parseFloat(mensajePartido[4]));
+            }
+        }
         System.out.println("Mensaje recibido: " + msg);
     }
 

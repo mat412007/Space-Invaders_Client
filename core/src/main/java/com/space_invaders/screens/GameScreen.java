@@ -74,8 +74,13 @@ public class GameScreen implements Screen {
         //jugador_2 = new Jugadores(nave_2, disparo, 2);
 
         if(multijugador) {
-            hc = new HiloCliente();
+            hc = new HiloCliente(this);
             hc.start();
+        }
+        if(!multijugador) { // Ajusto las posiciones de las dos naves
+            jugador = new Jugadores(nave, disparo, 1, null);
+            jugador.posicion.set((Gdx.graphics.getWidth()/2f)-(jugador.sprite.getWidth()/2f), 10);
+            jugador_2 = null;
         }
 
     }
@@ -86,17 +91,16 @@ public class GameScreen implements Screen {
             empiezaJuego = hc.empezar;
             if(jugador == null) {
                 if(hc.idCliente == 1){
-                    jugador = new Jugadores(nave, disparo, hc.idCliente);
+                    jugador = new Jugadores(nave, disparo, hc.idCliente, hc);
+                    jugador_2 = new Jugadores(nave_2, disparo, 2, hc);
                 } else if(hc.idCliente == 2){
-                    jugador = new Jugadores(nave_2, disparo, hc.idCliente);
+                    jugador = new Jugadores(nave_2, disparo, hc.idCliente, hc);
+                    jugador_2 = new Jugadores(nave, disparo, 1, hc);
                 } else {
-                    jugador = new Jugadores(nave, disparo, 1);
+                    System.out.println("Error: ID de cliente no válido.");
+                    return;
                 }
             }
-        }
-        if(!multijugador) { // Ajusto las posiciones de las dos naves
-            jugador.posicion = new Vector2((Gdx.graphics.getWidth()/2f)-(jugador.sprite.getWidth()/2f), 10);
-            //jugador_2.posicion = new Vector2(0, Gdx.graphics.getHeight());
         }
         if(!empiezaJuego && multijugador) {
             batch.begin();
@@ -118,6 +122,7 @@ public class GameScreen implements Screen {
         icono_2.setPosition(Gdx.graphics.getWidth() - (150 / 2f) - icono_1.getWidth() / 2f, Gdx.graphics.getHeight() / 2f - icono_2.getHeight() / 2f);
         icono_1.draw(batch);
         icono_2.draw(batch);
+
         // Dibujar fondo de pantalla ajustado
         fondoPantalla.setSize(700, Gdx.graphics.getHeight());
         fondoPantalla.setPosition(150, 0);
@@ -125,7 +130,11 @@ public class GameScreen implements Screen {
 
         // Dibujamos las naves de los jugadores y los aliens
         jugador.Dibujar(batch);
-        //jugador_2.Dibujar(batch);
+        jugador.Actualizar(deltaTime);
+        if(multijugador) {
+            jugador_2.Dibujar(batch);
+            jugador_2.Actualizar(deltaTime);
+        }
         alienManager.Dibujar(batch);
 
         // Líneas de límite del espacio de juego
@@ -185,6 +194,24 @@ public class GameScreen implements Screen {
 
         if (hc != null) {
             hc.cerrar();
+        }
+    }
+
+    public void actualizarPosicionNave(int idJugador, float nuevaX) {
+        if (idJugador == jugador.id) {
+            jugador.posicion.x = nuevaX;
+        } else if (idJugador == jugador_2.id) {
+            jugador_2.posicion.x = nuevaX;
+        }
+    }
+
+    public void actualizarPosicionDisparo(int idJugador, float nuevaX, float nuevaY) {
+        if (idJugador == jugador.id) {
+            jugador.posicion_disparo.x = nuevaX;
+            jugador.posicion_disparo.y = nuevaY;
+        } else if (idJugador == jugador_2.id) {
+            jugador_2.posicion_disparo.x = nuevaX;
+            jugador_2.posicion_disparo.y = nuevaY;
         }
     }
 

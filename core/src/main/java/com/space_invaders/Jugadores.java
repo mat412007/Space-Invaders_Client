@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.space_invaders.red.HiloCliente;
 
 public class Jugadores {
     private float x;
@@ -16,10 +17,11 @@ public class Jugadores {
     public Sprite sprite_disparo;
     public float velocidad = 350;
     public float velocidad_disparo = 1500;
-
+    private HiloCliente hc;
     public int id;
 
-    public Jugadores(Texture img_nave, Texture img_disparo, int id){
+    public Jugadores(Texture img_nave, Texture img_disparo, int id, HiloCliente hc){
+        this.hc = hc;
         sprite = new Sprite(img_nave);
         sprite_disparo = new Sprite(img_disparo);
         this.id = id;
@@ -48,22 +50,41 @@ public class Jugadores {
 
     // Metodo para actualizar la posición de la nave
     public void Actualizar(float deltaTime){
-        if(id == 1){
+        if((hc == null)){
             if(Gdx.input.isKeyPressed(Keys.A)){
-                posicion.x -= deltaTime * velocidad;// Mover a la izquierda
+                posicion.x -= Gdx.graphics.getDeltaTime() * velocidad;
             }
-
             if(Gdx.input.isKeyPressed(Keys.D)){
-                posicion.x += deltaTime * velocidad;// Mover a la derecha
-            }
-        } else if(id == 2){
-            if(Gdx.input.isKeyPressed(Keys.LEFT)) {
-                posicion.x -= deltaTime * velocidad; // mover a la izquierda
-            }
-            if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
-                posicion.x += deltaTime * velocidad; // mover a la derecha
+                posicion.x += Gdx.graphics.getDeltaTime() * velocidad;
             }
         }
+
+        String msg = "";
+        if(id == 1 && hc != null){
+            if(Gdx.input.isKeyPressed(Keys.A)){ // Enviar mensajes al tocar las teclas de movimiento
+                msg = "mover_izquierda:1";
+            }
+            if(Gdx.input.isKeyPressed(Keys.D)){
+                msg = "mover_derecha:1";
+            }
+            if(Gdx.input.isKeyPressed(Keys.W)){
+                msg = "disparar:1";
+            }
+        } else if(id == 2 && hc != null){
+            if(Gdx.input.isKeyPressed(Keys.LEFT)) {
+                msg = "mover_izquierda:2";
+            }
+            if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
+                msg = "mover_derecha:2";
+            }
+            if(Gdx.input.isKeyPressed(Keys.UP)){
+                msg = "disparar:2";
+            }
+        }
+        if(hc != null && !msg.isEmpty()){
+            hc.enviarMensaje(msg);
+        }
+
         // Para que la nave no se salga de los limites
         if(posicion.x < 150){
             posicion.x = 150;
@@ -71,20 +92,19 @@ public class Jugadores {
             posicion.x = 850-sprite.getWidth();
         }
 
-        posicion_disparo.y += deltaTime*velocidad_disparo;
-        // Accion de disparar
-        if(Gdx.input.isKeyPressed(Keys.W) && posicion_disparo.y >= Gdx.graphics.getHeight() && id==1){
-            posicion_disparo.x = posicion.x + sprite.getWidth()/2 - sprite_disparo.getWidth()/2; // Centrar el disparo en la nave
-            posicion_disparo.y = posicion.y + sprite.getHeight();
-        } else if(Gdx.input.isKeyPressed(Keys.UP) && posicion_disparo.y >= Gdx.graphics.getHeight() && id==2){
-            posicion_disparo.x = posicion.x + sprite.getWidth()/2 - sprite_disparo.getWidth()/2;// +(sprite_disparo.getWidth()/4);
-            posicion_disparo.y = posicion.y + sprite.getHeight();
-        }
+//        posicion_disparo.y += deltaTime*velocidad_disparo;
+//        // Accion de disparar
+//        if(Gdx.input.isKeyPressed(Keys.W) && posicion_disparo.y >= Gdx.graphics.getHeight() && id==1){
+//            posicion_disparo.x = posicion.x + sprite.getWidth()/2 - sprite_disparo.getWidth()/2; // Centrar el disparo en la nave
+//            posicion_disparo.y = posicion.y + sprite.getHeight();
+//        } else if(Gdx.input.isKeyPressed(Keys.UP) && posicion_disparo.y >= Gdx.graphics.getHeight() && id==2){
+//            posicion_disparo.x = posicion.x + sprite.getWidth()/2 - sprite_disparo.getWidth()/2;// +(sprite_disparo.getWidth()/4);
+//            posicion_disparo.y = posicion.y + sprite.getHeight();
+//        }
     }
 
     // Metodo para dibujar la nave en la posicion actualizada
     public void Dibujar(SpriteBatch batch){
-        Actualizar(Gdx.graphics.getDeltaTime());
         sprite.setPosition(posicion.x, posicion.y);
         sprite.draw(batch);
 
