@@ -57,8 +57,13 @@ public class Jugadores {
             if(Gdx.input.isKeyPressed(Keys.D)){
                 posicion.x += Gdx.graphics.getDeltaTime() * velocidad;
             }
+            if(Gdx.input.isKeyPressed(Keys.W) && posicion_disparo.y >= Gdx.graphics.getHeight() && id==1){
+                posicion_disparo.x = posicion.x + sprite.getWidth()/2 - sprite_disparo.getWidth()/2; // Centrar el disparo en la nave
+                posicion_disparo.y = posicion.y + sprite.getHeight();
+            }
         }
 
+        posicion_disparo.y += deltaTime*velocidad_disparo; // Necesita ajustes
         String msg = "";
         if(id == 1 && hc != null){
             if(Gdx.input.isKeyPressed(Keys.A)){ // Enviar mensajes al tocar las teclas de movimiento
@@ -92,12 +97,8 @@ public class Jugadores {
             posicion.x = 850-sprite.getWidth();
         }
 
-//        posicion_disparo.y += deltaTime*velocidad_disparo;
 //        // Accion de disparar
-//        if(Gdx.input.isKeyPressed(Keys.W) && posicion_disparo.y >= Gdx.graphics.getHeight() && id==1){
-//            posicion_disparo.x = posicion.x + sprite.getWidth()/2 - sprite_disparo.getWidth()/2; // Centrar el disparo en la nave
-//            posicion_disparo.y = posicion.y + sprite.getHeight();
-//        } else if(Gdx.input.isKeyPressed(Keys.UP) && posicion_disparo.y >= Gdx.graphics.getHeight() && id==2){
+//         else if(Gdx.input.isKeyPressed(Keys.UP) && posicion_disparo.y >= Gdx.graphics.getHeight() && id==2){
 //            posicion_disparo.x = posicion.x + sprite.getWidth()/2 - sprite_disparo.getWidth()/2;// +(sprite_disparo.getWidth()/4);
 //            posicion_disparo.y = posicion.y + sprite.getHeight();
 //        }
