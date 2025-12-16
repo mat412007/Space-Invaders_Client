@@ -156,9 +156,6 @@ public class GameScreen implements Screen {
         if (alienManager.colisionConBala(jugador.sprite_disparo)) {
             jugador.posicion_disparo.y = Gdx.graphics.getHeight();
         }
-//        if (alienManager.colisionConBala(jugador_2.sprite_disparo)) {
-//            jugador_2.posicion_disparo.y = Gdx.graphics.getHeight();
-//        }
 
         for (Alien alien : alienManager.getAliens()) {
             // Si los aliens tocan a cualquier jugador, ambos pierden

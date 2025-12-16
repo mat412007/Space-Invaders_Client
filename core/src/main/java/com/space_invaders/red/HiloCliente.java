@@ -90,6 +90,13 @@ public class HiloCliente extends Thread {
                 gameScreen.actualizarPosicionDisparo(naveId, Float.parseFloat(mensajePartido[3]), Float.parseFloat(mensajePartido[4]));
             }
         }
+        if (mensajePartido[0].equals("actualizarDisparo")) {
+            int id = Integer.parseInt(mensajePartido[1]);
+            float x = Float.parseFloat(mensajePartido[2]);
+            float y = Float.parseFloat(mensajePartido[3]);
+            gameScreen.actualizarPosicionDisparo(id, x, y);
+        }
+
         System.out.println("Mensaje recibido: " + msg);
     }
 

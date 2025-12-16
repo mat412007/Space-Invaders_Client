@@ -69,6 +69,16 @@ public class Jugadores {
             }
         }
 
+        if (esLocal && hc != null) {
+            if (posicion_disparo.y < Gdx.graphics.getHeight()) {
+                hc.enviarMensaje(
+                    "actualizarDisparo:" + id + ":" +
+                        posicion_disparo.x + ":" +
+                        posicion_disparo.y
+                );
+            }
+        }
+
         posicion_disparo.y += deltaTime*velocidad_disparo; // Necesita ajustes
         String msg = "";
         if(id == 1 && hc != null){
