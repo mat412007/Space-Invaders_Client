@@ -78,7 +78,7 @@ public class GameScreen implements Screen {
             hc.start();
         }
         if(!multijugador) { // Ajusto las posiciones de las dos naves
-            jugador = new Jugadores(nave, disparo, 1, null);
+            jugador = new Jugadores(nave, disparo, 1, null, true);
             jugador.posicion.set((Gdx.graphics.getWidth()/2f)-(jugador.sprite.getWidth()/2f), 10);
             jugador_2 = null;
         }
@@ -91,11 +91,11 @@ public class GameScreen implements Screen {
             empiezaJuego = hc.empezar;
             if(jugador == null) {
                 if(hc.idCliente == 1){
-                    jugador = new Jugadores(nave, disparo, hc.idCliente, hc);
-                    jugador_2 = new Jugadores(nave_2, disparo, 2, hc);
+                    jugador = new Jugadores(nave, disparo, 1, hc, true);
+                    jugador_2 = new Jugadores(nave_2, disparo, 2, hc, false);
                 } else if(hc.idCliente == 2){
-                    jugador = new Jugadores(nave_2, disparo, hc.idCliente, hc);
-                    jugador_2 = new Jugadores(nave, disparo, 1, hc);
+                    jugador = new Jugadores(nave_2, disparo, 2, hc, true);
+                    jugador_2 = new Jugadores(nave, disparo, 1, hc, false);
                 } else {
                     System.out.println("Error: ID de cliente no válido.");
                     return;

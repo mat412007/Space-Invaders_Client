@@ -20,11 +20,15 @@ public class Jugadores {
     private HiloCliente hc;
     public int id;
 
-    public Jugadores(Texture img_nave, Texture img_disparo, int id, HiloCliente hc){
+    private boolean esLocal;
+
+    public Jugadores(Texture img_nave, Texture img_disparo, int id, HiloCliente hc, boolean esLocal) {
         this.hc = hc;
         sprite = new Sprite(img_nave);
         sprite_disparo = new Sprite(img_disparo);
         this.id = id;
+
+        this.esLocal = esLocal;
 
         // Redimensionar la imagen directamente al cargarla
         if(id == 1){
@@ -50,6 +54,8 @@ public class Jugadores {
 
     // Metodo para actualizar la posición de la nave
     public void Actualizar(float deltaTime){
+        if(!esLocal) return;
+
         if((hc == null)){
             if(Gdx.input.isKeyPressed(Keys.A)){
                 posicion.x -= Gdx.graphics.getDeltaTime() * velocidad;
